@@ -17,13 +17,6 @@ const SLIDER_VAL: number = 50;
 const SLIDER_STEP: number = 0;
 const SLIDER_SCALING: number = 2.0;
 
-export interface ISlider3DOptions {
-    minimum?: number;
-    maximum?: number;
-    value?: number;
-    step?: number;
-}
-
 /**
  * Class used to create a slider in 3D
  */
@@ -45,13 +38,13 @@ export class Slider3D extends Control3D {
      * Creates a new slider
      * @param name defines the control name
      */
-    constructor(name?: string, options?: ISlider3DOptions) {
+    constructor(name?: string) {
         super(name);
 
-        this.minimum = options?.minimum ? options.minimum : SLIDER_MIN;
-        this.maximum = options?.maximum ? options.maximum : SLIDER_MAX;
-        this.step = options?.step ? options.step : SLIDER_STEP;
-        this.value = options?.value ? options.value : SLIDER_VAL;
+        this._minimum = SLIDER_MIN;
+        this._maximum = SLIDER_MAX;
+        this._step = SLIDER_STEP;
+        this._value = SLIDER_VAL;
     }
 
     /**
@@ -136,13 +129,6 @@ export class Slider3D extends Control3D {
         return this._sliderBar.position.x + this._sliderBar.scaling.y / 2;
     }
 
-    protected get roundingToDecimal(): boolean {
-        if (!this.mesh) {
-            return false;
-        }
-
-        return this.minimum % 1 !== 0 || this.maximum % 1 !== 0 || this.step !== 0;
-    }
     /**
      * Gets the slider bar material used by this control
      */
@@ -193,7 +179,7 @@ export class Slider3D extends Control3D {
     }
 
     private _createBehavior(): PointerDragBehavior {
-        const pointerDragBehavior = new PointerDragBehavior({ dragAxis: new Vector3(1, 0, 0) });
+        const pointerDragBehavior = new PointerDragBehavior({ dragAxis: Vector3.Right() });
         pointerDragBehavior.moveAttached = false;
 
         pointerDragBehavior.onDragObservable.add((event) => {
@@ -215,10 +201,10 @@ export class Slider3D extends Control3D {
     }
 
     private _convertToValue(position: number): number {
-        let value = ((position - this.start) / (this.end - this.start)) * (this.maximum - this.minimum) + this.minimum;
+        let value = ((position - this.start) / (this.end - this.start)) * (this.maximum - this.minimum);
         value = this.step ? Math.round(value / this.step) * this.step : value;
 
-        return Math.max(Math.min(this.roundingToDecimal ? Math.round(value * 100) / 100 : value, this._maximum), this._minimum);
+        return Math.max(Math.min(this.minimum + value, this._maximum), this._minimum);
     }
 
     /**
@@ -226,21 +212,9 @@ export class Slider3D extends Control3D {
      */
     public dispose() {
         super.dispose();
-
-        if (this._sliderBar) {
-            this._sliderBar.dispose();
-        }
-
-        if (this._sliderThumb) {
-            this._sliderThumb.dispose();
-        }
-
-        if (this._sliderBarMaterial) {
-            this._sliderBarMaterial.dispose();
-        }
-
-        if (this._sliderThumbMaterial) {
-            this._sliderThumbMaterial.dispose();
-        }
+        this._sliderBar?.dispose();
+        this._sliderThumb?.dispose();
+        this._sliderBarMaterial?.dispose();
+        this._sliderThumbMaterial?.dispose();
     }
 }
