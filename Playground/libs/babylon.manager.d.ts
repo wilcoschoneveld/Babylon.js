@@ -10,6 +10,8 @@ declare module BABYLON {
         static get Copyright(): string;
         /** Set the allow user input flag */
         static EnableUserInput: boolean;
+        /** Enable the main page render loop */
+        static RenderLoopReady: boolean;
         /** Pauses the main page render loop */
         static PauseRenderLoop: boolean;
         /** Set the preload auto update progress flag */
@@ -124,7 +126,7 @@ declare module BABYLON {
         static GetGameTime(): number;
         /** Get the current delta time in seconds */
         static GetDeltaSeconds(scene: BABYLON.Scene): number;
-        /** Get the delta time animation ratio multiplier */
+        /** Get the delta time animation ratio for 60 fps */
         static GetAnimationRatio(scene: BABYLON.Scene): number;
         /** Delays a function call using request animation frames. Returns a handle object */
         static SetTimeout(timeout: number, func: () => void): any;
@@ -281,7 +283,7 @@ declare module BABYLON {
         /** Get ammo.js total memory heap size */
         static GetPhysicsHeapSize(): number;
         /** Confiures ammo.js physcis engine advanced sweeping and collision detection options on the scene. */
-        static ConfigurePhysicsEngine(scene: BABYLON.Scene, deltaTimeStep?: number, subTimeStep?: number, maxWorldSweep?: number, ccdEnabled?: boolean, ccdPenetration?: number, gravityLevel?: BABYLON.Vector3): void;
+        static ConfigurePhysicsEngine(scene: BABYLON.Scene, deltaWorldStep?: boolean, subTimeStep?: number, maxWorldSweep?: number, ccdEnabled?: boolean, ccdPenetration?: number, gravityLevel?: BABYLON.Vector3): void;
         /** Gets the current ammo.js physics world. */
         static GetPhysicsEngine(scene: BABYLON.Scene): BABYLON.IPhysicsEngine;
         /** Gets the current ammo.js physics world. */
@@ -677,7 +679,7 @@ declare module BABYLON {
         getGameTime(): number;
         /** Get the current delta time in seconds */
         getDeltaSeconds(): number;
-        /** Get the delta time animation ratio multiplier */
+        /** Get the delta time animation ratio for 60 fps */
         getAnimationRatio(): number;
         /** Gets the safe transform mesh entity */
         getTransformMesh(): BABYLON.Mesh;
@@ -1417,11 +1419,14 @@ declare module BABYLON {
         private static TmpAmmoNormalC;
         static AddMeshVerts(btTriangleMesh: any, topLevelObject: BABYLON.IPhysicsEnabledObject, object: BABYLON.IPhysicsEnabledObject, scaling?: boolean, normals?: boolean): number;
         static AddHullVerts(btConvexHullShape: any, topLevelObject: BABYLON.IPhysicsEnabledObject, object: BABYLON.IPhysicsEnabledObject, scaling?: boolean): number;
-        static CreateImpostorCustomShape(scene: BABYLON.Scene, impostor: BABYLON.PhysicsImpostor, type: number, showDebugColliders?: boolean, colliderVisibility?: number): any;
+        static CreateImpostorCustomShape(scene: BABYLON.Scene, impostor: BABYLON.PhysicsImpostor, type: number, showDebugColliders?: boolean, colliderVisibility?: number, useTriangleNormals?: boolean): any;
+        static UseTriangleNormals(): boolean;
         static ShowDebugColliders(): boolean;
         static ColliderVisibility(): number;
         static CollisionWireframe(): boolean;
         static GetColliderMaterial(scene: BABYLON.Scene): BABYLON.Material;
+        static CalculateCombinedFriction(friction0: number, friction1: number): number;
+        static CalculateCombinedRestitution(restitution0: number, restitution1: number): number;
         /** TODO */
         static GetDirectTargetAngle(transform: BABYLON.TransformNode, worldSpaceTarget: BABYLON.Vector3): number;
         /** TODO */
@@ -1465,9 +1470,9 @@ declare module BABYLON {
         /** TODO */
         static ParseChildTransform(parent: BABYLON.TransformNode, source: BABYLON.IUnityTransform, defaultValue?: BABYLON.TransformNode): BABYLON.TransformNode;
         /** Gets the transform node abosulte position */
-        static GetAbsolutePosition(transform: BABYLON.TransformNode, offsetPosition?: BABYLON.Vector3, computeMatrix?: boolean): BABYLON.Vector3;
+        static GetAbsolutePosition(transform: BABYLON.TransformNode | BABYLON.Camera, offsetPosition?: BABYLON.Vector3, computeMatrix?: boolean): BABYLON.Vector3;
         /** Gets the transform node abosulte position */
-        static GetAbsolutePositionToRef(transform: BABYLON.TransformNode, result: BABYLON.Vector3, offsetPosition?: BABYLON.Vector3, computeMatrix?: boolean): void;
+        static GetAbsolutePositionToRef(transform: BABYLON.TransformNode | BABYLON.Camera, result: BABYLON.Vector3, offsetPosition?: BABYLON.Vector3, computeMatrix?: boolean): void;
         /** Transforms position from local space to world space. (Using TransformCoordinates) */
         static TransformPoint(owner: BABYLON.TransformNode | BABYLON.Camera, position: BABYLON.Vector3, computeMatrix?: boolean): BABYLON.Vector3;
         /** Inverse transforms position from world space to local space. (Using TransformCoordinates) */
@@ -1529,7 +1534,7 @@ declare module BABYLON {
         /** Private internal frame interpolation helper */
         private static InterpolateAnimation;
         /** Initialize default shader material properties */
-        static InitializeShaderMaterial(material: BABYLON.ShaderMaterial, binding?: boolean): void;
+        static InitializeShaderMaterial(material: BABYLON.ShaderMaterial, binding?: boolean, clipPlanes?: BABYLON.Nullable<boolean>): void;
         /** Transforms position from world space into screen space. */
         static WorldToScreenPoint(scene: BABYLON.Scene, position: BABYLON.Vector3, camera?: BABYLON.Camera): BABYLON.Vector3;
         /** Transforms a point from screen space into world space. */

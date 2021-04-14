@@ -4,11 +4,13 @@
 
 - Infinite Morph Targets: When supported (WebGL2+) you are no more limited to 4 morph targets per mesh ([Deltakosh](https://github.com/deltakosh))
 - Added support for ConditionalBlock for NodeMaterial ([Deltakosh](https://github.com/deltakosh))
+- Improved performance when using the shadow / cascacaded shadow generator ([Popov72](https://github.com/Popov72))
 
 ## Updates
 
 ### General
 
+- Added zoomToMouseLocation on ArcRotateCamera ([lovettchris](https://github.com/lovettchris))
 - Added static CenterToRef for vectors 2/3/4 ([aWeirdo](https://github.com/aWeirdo))
 - Added ability to view images (ktx2, png, jpg) to the sandbox. ([bghgary](https://github.com/bghgary))
 - Added optional smoothed normals for extruded procedural polygons. ([snagy](https://github.com/snagy))
@@ -23,6 +25,8 @@
 - Added a [helper class](https://doc.babylonjs.com/typedoc/classes/babylon.debug.directionallightfrustumviewer) to display the frustum of a directional light ([Popov72](https://github.com/Popov72))
 - Improved collision detection performance ([ottoville](https://github.com/ottoville/))
 - Added new helper functions for Quaternion.FromLookDirection and Matrix.LookDirection ([Alex-MSFT](https://github.com/Alex-MSFT))
+- Added support for clip planes to the edge renderer ([#10053](https://github.com/BabylonJS/Babylon.js/issues/10053)) ([Popov72](https://github.com/Popov72))
+- Added support for [cannon-es](https://github.com/pmndrs/cannon-es) to the cannonJSPlugin. ([frankieali](https://github.com/frankieali))
 
 ### Engine
 
@@ -37,7 +41,9 @@
 - Update glTF validator to `2.0.0-dev.3.3`. ([bghgary](https://github.com/bghgary))
 - Added support for KHR_xmp_json_ld for glTF loader. ([Sebavan](https://github.com/sebavan/), [bghgary](https://github.com/bghgary))
 - Added a `OptimizeNormals` option to the OBJ loader to smooth lighting ([Popov72](https://github.com/Popov72))
-- Added a `Prefiltered` option to the CubeTextureAssetTask ([MackeyK24](https://github.com/MackeyK24))
+- Added a `Prefiltered` option to the `CubeTextureAssetTask` ([MackeyK24](https://github.com/MackeyK24))
+- Added support for more uv sets to glTF loader. ([bghgary](https://github.com/bghgary))
+- Added support for KHR_materials_volume for glTF loader. ([MiiBond](https://github.com/MiiBond/))
 
 ### Navigation
 
@@ -50,12 +56,15 @@
 - Added an `OcclusionMaterial` to simplify depth-only rendering of geometry ([rgerd](https://github.com/rgerd))
 - PrePass can now be used in `RenderTargets` speeding up effects like SSAO2 or MotionBlur ([CraigFeldspar](https://github.com/CraigFeldspar))
 - Added support for morph targets to `ShaderMaterial` ([Popov72](https://github.com/Popov72))
+- Added support for clip planes to the `ShaderMaterial` ([Popov72](https://github.com/Popov72))
 - Added support for local cube map to refraction cube texture ([Popov72](https://github.com/Popov72))
-- Added support for KHR_materials_volume for glTF loader. ([MiiBond](https://github.com/MiiBond/))
+- Added the `cullBackFaces` property to `Material` ([Popov72](https://github.com/Popov72))
 
 ### Meshes
 
 - `LineMesh` now allows assigning custom material via `material` setter. ([FullStackForger](https://github.com/FullStackForger)
+- `InstancedMesh` can now be sorted from back to front before rendering if the material is transparent ([Popov72](https://github.com/Popov72))
+- Add option to decompose the `newWorldMatrix` when passed into `TransformNode.freezeWorldMatrix`. ([bghgary](https://github.com/bghgary))
 
 ### Inspector
 
@@ -65,7 +74,7 @@
 
 ### NME
 
-- Increased float precision to 4([msDestiny14](https://github.com/msDestiny14))
+- Increased float precision to 4 ([msDestiny14](https://github.com/msDestiny14))
 - Added ability to make input node's properties visible in the properties of a custom frame ([msDestiny14](https://github.com/msDestiny14))
 
 ### GUIEditor
@@ -80,6 +89,7 @@
 - Added parenting system ([msDestiny14](https://github.com/msDestiny14))
 - Added ability to change zorder ([msDestiny14](https://github.com/msDestiny14))
 - Added highlighting on selection ([msDestiny14](https://github.com/msDestiny14))
+- Creating default values for controls ([msDestiny14](https://github.com/msDestiny14))
 
 ### GUI
 
@@ -90,6 +100,7 @@
 - Added two touch-enabled GUI controls, `TouchMeshButton3D` and `TouchHolographicButton`, added option on the WebXR hand tracking feature for enabling touch collisions ([rickfromwork](https://github.com/rickfromwork), [satyapoojasama](https://github.com/satyapoojasama))
 - Added `imageWidth()` and `imageHeight()` to access the source image dimensions of `Image` ([Queatz](https://github.com/Queatz))
 - Added a `FluentButtonMaterial` to give the `TouchHolographicButton` the same look and feel as the HoloLens 2 shell ([rgerd](https://github.com/rgerd))
+- Added property `renderToIntermediateTexture` to `Container` which when set to true, will render children to an intermediate texture rather than direct to host allowing for DOM style alpha blending ([BlindingHues](https://github.com/blindinghues))
 
 ### WebXR
 
@@ -103,6 +114,10 @@
 - Added initial support for the `sessiongranted` event ([#9860](https://github.com/BabylonJS/Babylon.js/issues/9860)) ([RaananW](https://github.com/RaananW))
 - Remove the warning for input source not found when in (touch)screen mode ([#9938](https://github.com/BabylonJS/Babylon.js/issues/9938)) ([RaananW](https://github.com/RaananW))
 - Fixed an issue with resources disposal when exiting XR ([#10012](https://github.com/BabylonJS/Babylon.js/issues/10012)) ([RaananW](https://github.com/RaananW))
+- Added observable to target mesh position update for teleportation ([#9402](https://github.com/BabylonJS/Babylon.js/issues/9402)) ([RaananW](https://github.com/RaananW))
+- Prevent the XR render target texture from rescaling when using the scene optimizer ([#10135](https://github.com/BabylonJS/Babylon.js/issues/10135)) ([RaananW](https://github.com/RaananW))
+- Force https when using WebXR except for when hostname is localhost ([#10154](https://github.com/BabylonJS/Babylon.js/issues/10154)) ([RaananW](https://github.com/RaananW))
+- Use the newly-introduced physics velocities of controllers/headset where available ([#10118](https://github.com/BabylonJS/Babylon.js/issues/10118)) ([RaananW](https://github.com/RaananW))
 
 ### Gizmos
 
@@ -127,7 +142,7 @@
 - Fix ArcRotateCamera panning with axis decomposition ([CedricGuillemet](https://github.com/CedricGuillemet))
 - Fix an issue with keyboard control (re)attachment. ([#9411](https://github.com/BabylonJS/Babylon.js/issues/9411)) ([RaananW](https://github.com/RaananW))
 - Fix issue when scaling is reapplied with BoundingBoxGizmo and GizmoManager ([CedricGuillemet](https://github.com/CedricGuillemet)
-- Fix direct loading of a glTF string that has base64-encoded URI. ([bghgary](https://github.com/bghgary)
+- Fix direct loading of a glTF string that has base64-encoded URI. ([bghgary](https://github.com/bghgary))
 - Fix capsule impostor size computation for ammojs ([CedricGuillemet](https://github.com/CedricGuillemet)
 - Fix crash of some node materials using instances on iOS ([Popov72](https://github.com/Popov72))
 - Fix the code generated for the NME gradient block ([Popov72](https://github.com/Popov72))
@@ -168,6 +183,14 @@
 - Fix the strength input parameter of the NME `PerturbNormal` block that was handled as a 1/strength value ([Popov72](https://github.com/Popov72))
 - Fix an issue with audio engine not being garbage-collected when engine is disposed ([RaananW](https://github.com/RaananW))
 - Fix the NME `NormalBlend` block ([Popov72](https://github.com/Popov72))
+- Fix Compatibility with NPM 7 ([Sebavan](https://github.com/sebavan))
+- Fix for cloning meshes for 3D GUIs ([msDestiny14](https://github.com/msDestiny14))
+- Fix computation of min/max values in glTF loader when using normalized integers ([#10112](https://github.com/BabylonJS/Babylon.js/issues/10112)) ([Popov72](https://github.com/Popov72))
+- Fix instance picking when in billboard mode ([Popov72](https://github.com/Popov72))
+- Fix NME generation code missing `target` and `visibleInInspector` properties ([Popov72](https://github.com/Popov72))
+- Fix `Scene.getPointerOverMesh` returning disposed mesh ([Popov72](https://github.com/Popov72))
+- Fix context lost handling ([#10163](https://github.com/BabylonJS/Babylon.js/issues/10163)) ([Popov72](https://github.com/Popov72))
+- Fix for GUI slider step values greater than one ([msDestiny14](https://github.com/msDestiny14))
 
 ## Breaking changes
 
@@ -179,3 +202,5 @@
 - Mesh.createInstance no longer make a unique Geometry for the Mesh so updating one Geometry can affect more meshes than before. Use Mesh.makeUniqueGeometry for old behaviour. ([breakin](https://github.com/breakin))
 - Ammo.js needs to be initialized before creating the plugin with `await Ammo();` since Ammo introduced an async init in their library. ([sebavan](https://github.com/sebavan))
 - Fixed spelling of EventState.initialize() ([seritools](https://github.com/seritools))
+- `SkeletonViewer` is now enabled by default ([Deltakosh](https://github.com/deltakosh))
+- `BindEyePosition` has been moved from `Material` to `Scene` to avoid a circular dependency problem and is now a non-static method (`bindEyePosition`) ([Popov72](https://github.com/Popov72))

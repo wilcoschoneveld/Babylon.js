@@ -270,6 +270,7 @@ export class PBRMaterialDefines extends MaterialDefines
 
     public SS_THICKNESSANDMASK_TEXTURE = false;
     public SS_THICKNESSANDMASK_TEXTUREDIRECTUV = 0;
+    public SS_HAS_THICKNESS = false;
 
     public SS_REFRACTIONMAP_3D = false;
     public SS_REFRACTIONMAP_OPPOSITEZ = false;
@@ -2089,7 +2090,7 @@ export abstract class PBRBaseMaterial extends PushMaterial {
             }
 
             // View
-            if (scene.fogEnabled && mesh.applyFog && scene.fogMode !== Scene.FOGMODE_NONE || reflectionTexture) {
+            if (scene.fogEnabled && mesh.applyFog && scene.fogMode !== Scene.FOGMODE_NONE || reflectionTexture || mesh.receiveShadows) {
                 this.bindView(effect);
             }
 

@@ -1379,6 +1379,13 @@ declare module BABYLON.GUI {
         protected _adaptWidthToChildren: boolean;
         /** @hidden */
         protected _adaptHeightToChildren: boolean;
+        /** @hidden */
+        protected _renderToIntermediateTexture: boolean;
+        /** @hidden */
+        protected _intermediateTexture: BABYLON.Nullable<BABYLON.DynamicTexture>;
+        /** Gets or sets boolean indicating if children should be rendered to an intermediate texture rather than directly to host, useful for alpha blending */
+        get renderToIntermediateTexture(): boolean;
+        set renderToIntermediateTexture(value: boolean);
         /**
          * Gets or sets a boolean indicating that layout cycle errors should be displayed on the console
          */
@@ -4114,7 +4121,7 @@ declare module BABYLON.GUI {
         linkToTransformNode(node: BABYLON.Nullable<BABYLON.TransformNode>): Control3D;
         /** @hidden **/
         _prepareNode(scene: BABYLON.Scene): void;
-        protected _injectGUI3DMetadata(node: BABYLON.TransformNode): any;
+        protected _injectGUI3DReservedDataStore(node: BABYLON.TransformNode): any;
         /**
          * Node creation.
          * Can be overriden by children
