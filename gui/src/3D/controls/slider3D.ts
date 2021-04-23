@@ -5,7 +5,8 @@ import { TransformNode } from "babylonjs/Meshes/transformNode";
 import { Scene } from "babylonjs/scene";
 import { Mesh } from "babylonjs/Meshes/mesh";
 import { Control3D } from "./control3D";
-import { MeshBuilder } from "babylonjs/Meshes/meshBuilder";
+import { BoxBuilder } from "babylonjs/Meshes/Builders/boxBuilder";
+import { CylinderBuilder } from "babylonjs/Meshes/Builders/cylinderBuilder";
 import { PointerDragBehavior } from "babylonjs/Behaviors/Meshes/pointerDragBehavior";
 import { StandardMaterial } from "babylonjs/Materials/standardMaterial";
 import { Color3 } from "babylonjs/Maths/math.color";
@@ -147,13 +148,13 @@ export class Slider3D extends Control3D {
     protected _createNode(scene: Scene): TransformNode {
         const anchor = new TransformNode(`${this.name}_slider`, scene);
 
-        const sliderBar = MeshBuilder.CreateCylinder(`${this.name}_sliderbar`, { diameter: 0.03, height: 1.0 }, scene);
+        const sliderBar = CylinderBuilder.CreateCylinder(`${this.name}_sliderbar`, { diameter: 0.03, height: 1.0 }, scene);
         sliderBar.rotation.z = -Math.PI / 2;
         sliderBar.scaling.y = SLIDER_SCALING;
         sliderBar.isPickable = false;
         sliderBar.setParent(anchor);
 
-        const sliderThumb = MeshBuilder.CreateBox(`${this.name}_sliderthumb`, { size: 0.1 }, scene);
+        const sliderThumb = BoxBuilder.CreateBox(`${this.name}_sliderthumb`, { size: 0.1 }, scene);
         sliderThumb.scaling = new Vector3(SLIDER_SCALING, SLIDER_SCALING, SLIDER_SCALING);
         sliderThumb.position.x = this._convertToPosition(this.value);
         sliderThumb.addBehavior(this._createBehavior());
